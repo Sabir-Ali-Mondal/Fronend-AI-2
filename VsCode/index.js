@@ -620,8 +620,12 @@ function appendChatMessage(sender, message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-async function updateTrainingList() {
+let currentPage = 1;
+const itemsPerPage = 50;
+
+async function updateTrainingList(page = 1) {
     const trainingList = document.getElementById('training-list');
+    currentPage = page;
 
     try {
         trainingList.innerHTML = '<div class="text-center"><div class="loading"></div> Loading training data...</div>';
@@ -635,19 +639,41 @@ async function updateTrainingList() {
             return;
         }
 
-        trainingData.forEach(item => {
+        const totalItems = trainingData.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const startIndex = (page - 1) * itemsPerPage;
+        const paginatedData = trainingData.slice(startIndex, startIndex + itemsPerPage);
+
+        paginatedData.forEach(item => {
             const listItem = document.createElement('div');
             listItem.className = 'training-item';
             listItem.innerHTML = `
-        <div class="question">${escapeHtml(item.question)}</div>
-        <div class="answer">${escapeHtml(item.answer)}</div>
-        <div class="actions">
-          <button class="btn btn-sm btn-outline-primary edit-btn" data-id="${item.id}">Edit</button>
-          <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${item.id}">Delete</button>
-        </div>
-      `;
+                <div class="question">${escapeHtml(item.question)}</div>
+                <div class="answer">${escapeHtml(item.answer)}</div>
+                <div class="actions">
+                    <button class="btn btn-sm btn-outline-primary edit-btn" data-id="${item.id}">Edit</button>
+                    <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${item.id}">Delete</button>
+                </div>
+            `;
             trainingList.appendChild(listItem);
         });
+
+        // Add pagination inside trainingList
+        if (totalPages > 1) {
+            const paginationContainer = document.createElement('div');
+            paginationContainer.className = 'pagination text-center mt-3';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `btn btn-sm mx-1 ${i === page ? 'btn-primary' : 'btn-outline-primary'}`;
+                pageButton.innerText = i;
+                pageButton.onclick = () => updateTrainingList(i);
+                paginationContainer.appendChild(pageButton);
+            }
+
+            trainingList.appendChild(paginationContainer);
+        }
+
     } catch (error) {
         console.error('Error updating training list:', error);
         trainingList.innerHTML = '<p class="text-center text-danger">Error loading training data.</p>';
