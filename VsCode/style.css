@@ -1,17 +1,35 @@
 /* High-level creative UI/UX CSS for Advanced AI Chatbot */
 
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100%;
+    width: 100%;
+}
+
 .chatbot-container {
     width: 100vw;
-    max-width: 1200px;
-    height: 95vh;
+    height: 100vh;
     display: grid;
     grid-template-columns: 0px 1fr;
     grid-template-rows: auto 1fr;
     grid-template-areas:
         "tabs tabs"
         "sidebar main";
-    background: #ffffff;
+    background: linear-gradient(to right, #e0eafc, #cfdef3);
     overflow: hidden;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 0;
 }
 
 #chatbotTabs {
@@ -20,9 +38,9 @@
     justify-content: center;
     gap: 30px;
     background: #343a40;
-    padding: 15px 0;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    padding: 10px 0;
+    border-radius: 10px 10px 0px 0px;
+
 }
 
 #chatbotTabs .nav-link {
@@ -47,13 +65,14 @@
     background: #fdfdfd;
     border-top: 1px solid #ddd;
     border-left: 1px solid #ddd;
+    border-radius: 0px 0px 10px 10px;
 }
 
 #chat-box {
     background: #eef2f3;
     border-radius: 15px;
     padding: 20px;
-    height: 60vh;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -69,7 +88,7 @@
 
 .input-group input {
     border-radius: 30px;
-    padding: 12px 20px;
+    padding: 12px 30px;
     border: 1px solid #ccc;
     flex-grow: 1;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -149,27 +168,64 @@
 }
 
 .notification {
-    animation: fadeInOut 4s ease-in-out forwards;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #ffffff;
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    font-size: 16px;
+    font-weight: 500;
+    animation: fadeInOut 4s ease forwards;
+    z-index: 9999;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.notification::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 4px;
+    width: 0%;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    animation: progressBar 3s linear forwards;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+@keyframes progressBar {
+    0% {
+        width: 100%;
+    }
+
+    100% {
+        width: 0%;
+    }
 }
 
 @keyframes fadeInOut {
     0% {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-20px) scale(0.95);
     }
 
-    10% {
+    15% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 
-    90% {
+    85% {
         opacity: 1;
+        transform: translateY(0) scale(1);
     }
 
     100% {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-20px) scale(0.95);
     }
 }
 
